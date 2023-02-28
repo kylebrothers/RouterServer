@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  adguard:
+    depends_on:
+      - unbound     
+    container_name: adguardhome
+    image: adguard/adguardhome
+    restart: unless-stopped
+    ports:
+      - "853:853"
+    volumes:
+      - ./work:/opt/adguardhome/work
+      - ./config:/opt/adguardhome/conf
+     
+  unbound:
+    container_name: unbound
+    restart: unless-stopped
+    image: klutchell/unbound
+    networks:
+      default:
+        ipv4_address: 172.20.0.250
+
+networks:
+  default:
+    #name: name_of_external_network
+    ipam:
+     config:
+     - subnet: 172.20.0.1/24
